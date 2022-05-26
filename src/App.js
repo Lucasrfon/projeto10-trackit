@@ -3,6 +3,8 @@ import "./components/reset.css"
 import './components/globalstyle.css'
 import Login from './Routes/Login';
 import Habits from './Routes/Habits';
+import Daily from './Routes/Daily';
+import History from './Routes/History';
 
 export default function App () {
     return (
@@ -27,6 +29,8 @@ export default function App () {
                     route="/"
                 />} />
                 <Route path='/habitos' element={<Habits />} />
+                <Route path='/hoje' element={<Daily />} />
+                <Route path='/historico' element={<History />} />
             </Routes>
         </BrowserRouter>
     )
