@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import "./reset.css"
-import './globalstyle.css'
-import Login from './Login';
+import "./components/reset.css"
+import './components/globalstyle.css'
+import Login from './Routes/Login';
+import Habits from './Routes/Habits';
 
 export default function App () {
     return (
@@ -13,7 +14,7 @@ export default function App () {
                     button="Entrar"
                     footer="Não tem uma conta? Cadastre-se!"
                     route="/cadastro"
-                />}/>
+                />} />
                 <Route path="/cadastro" element={
                 <Login
                     inputs={[
@@ -24,7 +25,8 @@ export default function App () {
                     button="Cadastrar"
                     footer="Já tem uma conta? Faça login!"
                     route="/"
-                />}/>
+                />} />
+                <Route path='/habitos' element={<Habits />} />
             </Routes>
         </BrowserRouter>
     )

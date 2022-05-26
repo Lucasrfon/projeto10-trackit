@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import logo from './images/logo.svg';
+import logo from '../images/logo.svg';
 
 export default function Login({inputs, button, footer, route}) {
     return (
