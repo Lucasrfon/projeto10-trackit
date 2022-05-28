@@ -1,24 +1,35 @@
 import styled from 'styled-components';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Link } from 'react-router-dom';
+
+import { useContext } from "react";
+import ProgressContext from "../contexts/ProgressContext";
 
 export default function Footer () {
-    const percentage = 80
+    const { progress } = useContext(ProgressContext);
+
     return (
         <Container>
-            <span>Hábitos</span>
+            <Link to="/habitos" style={{ textDecoration: 'none', color: 'inherit'}}>
+                <span>Hábitos</span>
+            </Link>
             <div>
-                <CircularProgressbar value={percentage} text="Hoje"
-                background
-                backgroundPadding={6}
-                styles={buildStyles({
-                backgroundColor: "#52B6FF",
-                textColor: "#fff",
-                pathColor: "#fff",
-                trailColor: "transparent",
-                })} />
+                <Link to="/hoje" style={{ textDecoration: 'none', color: 'inherit'}}>
+                    <CircularProgressbar value={progress} text="Hoje"
+                    background
+                    backgroundPadding={6}
+                    styles={buildStyles({
+                    backgroundColor: "#52B6FF",
+                    textColor: "#fff",
+                    pathColor: "#fff",
+                    trailColor: "transparent",
+                    })} />
+                </Link>
             </div>
-            <span>Histórico</span>
+            <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit'}}>
+                <span>Histórico</span>
+            </Link>
         </Container>
     )
 }

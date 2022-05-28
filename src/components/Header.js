@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
+
 export default function Header () {
+    const { user } = useContext(UserContext);
     return (
         <Container>
             <h1>TrackIt</h1>
-            <img src='https://i.etsystatic.com/21753258/r/il/242e18/3280727045/il_570xN.3280727045_qryy.jpg' alt='User'/>
+            <img src={user.image} alt={user.name}/>
         </Container>
     )
 }
@@ -33,5 +37,6 @@ img {
     height: 51px;
     width: 51px;
     border-radius: 50%;
+    object-fit: cover;
 }
 `

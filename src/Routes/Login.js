@@ -4,7 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../images/logo.svg';
 
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
+
 export default function Login() {
+    const { setUser } = useContext(UserContext);
     const [login, setLogin] = useState({email: "", password: ""});
     const [able, setAble] = useState(true);
     const navigate = useNavigate();
@@ -14,7 +18,12 @@ export default function Login() {
         setAble(!able);
         const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', {email: login.email, password: login.password});
         promise.catch(badRegister);
-        promise.then(navigate('/hoje'));
+        promise.then(goodRegister);
+    }
+
+    function goodRegister(promise) {
+        setUser(promise.data)
+        navigate('/hoje')
     }
 
     function badRegister() {
