@@ -1,19 +1,21 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../images/logo.svg';
 
-export default function Login({inputs, button, footer, route}) {
+export default function Login() {
+    const [login, setLogin] = useState({email: "", password: ""})
     return (
         <Container>
             <img src={logo} alt='Logo' />
             <form>
-                {inputs.map((a, index) => (
-                    <input type={a.type} placeholder={a.holder} key={index} />
-                ))}
-                <button>{button}</button>
+                <input type="email" placeholder="email" required value={login.email} onChange={e => setLogin({...login, email: e.target.value})} />
+                <input type="password" placeholder="senha" required value={login.password} onChange={e => setLogin({...login, password: e.target.value})} />
+                {console.log(login)}
+                <button>Entrar</button>
             </form>
-            <Link to={route} style={{ textDecoration: 'none' }}>
-                <span>{footer}</span>
+            <Link to="/cadastro" style={{ textDecoration: 'none' }}>
+                <span>Não tem uma conta? Cadastre-se!</span>
             </Link>
         </Container>
     )

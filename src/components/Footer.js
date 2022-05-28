@@ -1,10 +1,23 @@
 import styled from 'styled-components';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function Footer () {
+    const percentage = 80
     return (
         <Container>
             <span>Hábitos</span>
-            <div>Hoje</div>
+            <div>
+                <CircularProgressbar value={percentage} text="Hoje"
+                background
+                backgroundPadding={6}
+                styles={buildStyles({
+                backgroundColor: "#52B6FF",
+                textColor: "#fff",
+                pathColor: "#fff",
+                trailColor: "transparent",
+                })} />
+            </div>
             <span>Histórico</span>
         </Container>
     )
@@ -24,14 +37,7 @@ const Container = styled.div`
     justify-content: space-around;
 
 div {
-    background-color: #52B6FF;
-    color: white;
-    border-radius: 50%;
-    height: 91px;
-    min-width: 91px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 91px;
     margin-bottom: 50px;
 }
 `
