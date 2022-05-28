@@ -13,7 +13,7 @@ import ProgressContext from './contexts/ProgressContext';
 
 export default function App () {
     const [user, setUser] = useState({});
-    const [progress, setProgress] = useState(0)
+    const [progress, setProgress] = useState(0);
 
     return (
         <BrowserRouter>
