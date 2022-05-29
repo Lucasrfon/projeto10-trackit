@@ -8,46 +8,51 @@ import Footer from "../components/Footer";
 
 export default function Habits () {
     const { user } = useContext(UserContext);
-    const config = {headers: {"Authorization": user.token}};
+    const config = {headers: {Authorization: `Bearer ${user.token}`}};
     const [creat, setCreat] = useState(false);
-    const [newHabit, setNewHabit] = useState({name: "", days: []});
-    const [habits, setHabits] = useState([{
-		id: 1,
-		name: "Nome do hábito",
-		days: [1, 3, 5]
-	},
-    {
-		id: 1,
-		name: "Nome do hábito",
-		days: [1, 3, 5]
-	},
-	{
-		id: 2,
-		name: "Nome do hábito 2",
-		days: [1, 3, 4, 6]
-	}, {id: 1,
-		name: "Nome do hábito",
-		days: [1, 3, 5]
-	},
-	{
-		id: 2,
-		name: "Nome do hábito 2",
-		days: [1, 3, 4, 6]
-	}, {id: 1,
-		name: "Nome do hábito",
-		days: [1, 3, 5]
-	},
-	{
-		id: 2,
-		name: "Nome do hábito 2",
-		days: [1, 3, 4, 6]
-	}]);
+    const week = ["D", "S", "T", "Q", "Q", "S", "S"];
+    const [newHabit, setNewHabit] = useState("");
+    const [newHabitDays, setNewHabitDays] = useState([]);
+    const [habits, setHabits] = useState([]);
 
     useEffect(() => {
         const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config);
-        promise.catch(() => setHabits([]));
+        promise.then(goodRegister);
     },[]);
-    console.log(newHabit);
+
+    function goodRegister (promise) {
+        setHabits(promise.data)
+    }
+
+    function select(index) {
+        if(newHabitDays.includes(index)) {
+            setNewHabitDays(newHabitDays.filter((i) => i !== index));
+        } else {
+            setNewHabitDays([...newHabitDays, index]);
+        }
+    }
+
+    function sendHabit() {
+        const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', {name: newHabit, days: newHabitDays}, config);
+        promise.then(updateHabit);
+    }
+
+    function updateHabit (promise) {
+        setHabits([...habits, promise.data]);
+        setNewHabitDays([]);
+        setNewHabit("");
+    }
+
+    function deleteHabit (e) {
+        if(true) {
+            axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${e}`, config).then((e) => removeHabit(e))
+        }
+    }
+
+    function removeHabit(e) {
+        const remove = habits.filter(a => a !== e);
+        setHabits(remove)
+    }
 
     return (
         <>
@@ -59,19 +64,17 @@ export default function Habits () {
                 </span>
                 {creat ?
                     <NewHabit>
-                        <input placeholder="nome do hábito" value={newHabit.name} onChange={e => setNewHabit({...newHabit, name: e.target.value})} />
+                        <input placeholder="nome do hábito" value={newHabit} onChange={e => setNewHabit(e.target.value)} />
                         <div>
-                            <div>D</div>
-                            <div>S</div>
-                            <div>T</div>
-                            <div>Q</div>
-                            <div>Q</div>
-                            <div>S</div>
-                            <div>S</div>
+                            {week.map((a, index) => <Day key={index} 
+                            color={newHabitDays.includes(index) ? "white" : "#DBDBDB"}
+                            background={newHabitDays.includes(index) ? "#CFCFCF" : "white"}
+                            border={newHabitDays.includes(index) ? "#CFCFCF" : "#D4D4D4"}
+                            onClick={() => select(index)}>{a}</Day>)}
                         </div>
                         <div>
                             <button>cancelar</button>
-                            <button>salvar</button>
+                            <button onClick={() => sendHabit()}>salvar</button>
                         </div>
                     </NewHabit>
                     :
@@ -81,20 +84,18 @@ export default function Habits () {
                     ?
                     <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                     :
-                    habits.map((a) => 
-                    <Habit key={a.id}>
-                        <h3>{a.name}</h3>
-                        <div>
-                            <div>D</div>
-                            <div>S</div>
-                            <div>T</div>
-                            <div>Q</div>
-                            <div>Q</div>
-                            <div>S</div>
-                            <div>S</div>
-                        </div>
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </Habit>)
+                    habits.map((a) =>
+                        <Habit key={a.id}>
+                            <h3>{a.name}</h3>
+                            <div>
+                                {week.map((e, index) => <Day key={index} 
+                                color={a.days.includes(index) ? "white" : "#DBDBDB"}
+                                background={a.days.includes(index) ? "#CFCFCF" : "white"}
+                                border={a.days.includes(index) ? "#CFCFCF" : "#D4D4D4"}
+                                >{e}</Day>)}
+                            </div>
+                            <ion-icon name="trash-outline" onClick={() => deleteHabit(a.id)}></ion-icon>
+                        </Habit>)
                 }
             </Container>
             <Footer />
@@ -104,11 +105,10 @@ export default function Habits () {
 
 const Container = styled.div`
     background-color: #F2F2F2;
-    height: 100vh;
+    min-height: 100vh;
     padding: 100px 15px;
     font-size: 18px;
     color: #666666;
-    margin-bottom: 150px;
 
 span {
     display: flex;
@@ -157,17 +157,6 @@ div {
     display: flex;
     margin-top: 5px;
 
-    div {
-        border: solid #D4D4D4 1px;
-        width: 30px;
-        height: 30px;
-        border-radius: 5px;
-        color: #DBDBDB;
-        justify-content: center;
-        align-items: center;
-        margin-right: 5px;
-    }
-
     button {
         margin-top: 20px;
         width: 85px;
@@ -176,6 +165,18 @@ div {
         margin-left: 8px;
     }
 }
+`
+
+const Day = styled.div`
+    border: solid ${props => props.border} 1px;
+    background-color: ${props => props.background};
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: ${props => props.color};
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
 `
 
 const Habit = styled.div`
@@ -194,11 +195,12 @@ div {
     margin-top: 8px;
 
     div {
-        border: solid #D4D4D4 1px;
+        border: solid ${props => props.border} 1px;
+        background-color: ${props => props.background};
         width: 30px;
         height: 30px;
         border-radius: 5px;
-        color: #DBDBDB;
+        color: ${props => props.color};
         justify-content: center;
         align-items: center;
         margin-right: 5px;
