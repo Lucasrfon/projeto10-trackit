@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import UserContext from "../contexts/UserContext";
+import "dayjs/locale/pt-br";
 
 import { useContext, useEffect, useState } from "react";
 import ProgressContext from "../contexts/ProgressContext";
@@ -20,23 +21,29 @@ export default function Daily() {
     }, []);
 
     function renderHabits (promise) {
-        setHabits(promise.data)
+        setProgress(promise.data.filter(a => a.done === true).length / promise.data.length * 100);
+        setHabits(promise.data);
     }
 
     function select (id, done) {
         console.log(id);
         console.log(done);
         if(done === false){
-            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, config);
-            promise.then(() => console.log('oi'))
-        } 
+            axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, {}, config).then(
+                axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config).then(renderHabits)
+            )
+        } else {
+            axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, {}, config).then(
+                axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config).then(renderHabits)
+            )
+        }
     }
 
     return (
         <>
             <Header />
             <Container>
-                <h1>{dayjs().format('dddd, DD/MM')}</h1>
+                <h1>{dayjs().locale("pt-br").format('dddd, DD/MM')}</h1>
                 {progress === 0 ? <Progresso color="#BABABA">Nenhum hábito concluído ainda</Progresso> : <Progresso color="#8FC549">{progress}% dos hábitos concluídos</Progresso>}
                 <Habits>
                     {console.log(habits)}
