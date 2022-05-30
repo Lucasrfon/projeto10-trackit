@@ -14,15 +14,11 @@ export default function Habits () {
     const [newHabit, setNewHabit] = useState("");
     const [newHabitDays, setNewHabitDays] = useState([]);
     const [habits, setHabits] = useState([]);
+    const [able, setAble] = useState(true);
 
     useEffect(() => {
-        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config);
-        promise.then(goodRegister);
+        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config).then((e) => setHabits(e.data));
     },[]);
-
-    function goodRegister (promise) {
-        setHabits(promise.data)
-    }
 
     function select(index) {
         if(newHabitDays.includes(index)) {
@@ -33,25 +29,34 @@ export default function Habits () {
     }
 
     function sendHabit() {
-        const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', {name: newHabit, days: newHabitDays}, config);
-        promise.then(updateHabit);
+        setAble(!able);
+        axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', {name: newHabit, days: newHabitDays}, config).then(updateHabit).catch(fail);
     }
 
-    function updateHabit (promise) {
-        setHabits([...habits, promise.data]);
+    function updateHabit () {
+        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config).then((e) => setHabits(e.data));
         setNewHabitDays([]);
         setNewHabit("");
+        setCreat(!creat);
+    }
+
+    function fail () {
+        setAble(!able);
+        alert('Falha ao cadastrar novo hábito, favor tentar novamente!');
     }
 
     function deleteHabit (e) {
-        if(true) {
-            axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${e}`, config).then((e) => removeHabit(e))
+        setAble(!able);
+        if(window.confirm("Certeza?")) {
+            axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${e}`, config).then(updateHabitNeg)
+        } else {
+            setAble(!able);
         }
     }
 
-    function removeHabit(e) {
-        const remove = habits.filter(a => a !== e);
-        setHabits(remove)
+    function updateHabitNeg () {
+        setAble(!able)
+        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config).then((e) => setHabits(e.data));
     }
 
     return (
@@ -73,7 +78,7 @@ export default function Habits () {
                             onClick={() => select(index)}>{a}</Day>)}
                         </div>
                         <div>
-                            <button>cancelar</button>
+                            <button onClick={() => setCreat(!creat)}>cancelar</button>
                             <button onClick={() => sendHabit()}>salvar</button>
                         </div>
                     </NewHabit>
@@ -143,6 +148,15 @@ const NewHabit = styled.div`
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    
+& > div:last-child {
+    justify-content: end;
+}
+
+& button:first-child {
+    background-color: white;
+    color: #52B6FF;
+}
 
 input {
     width: 100%;

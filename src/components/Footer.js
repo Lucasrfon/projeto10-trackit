@@ -1,9 +1,9 @@
+import { Link } from 'react-router-dom';
+import { useContext } from "react";
 import styled from 'styled-components';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { Link } from 'react-router-dom';
 
-import { useContext } from "react";
 import ProgressContext from "../contexts/ProgressContext";
 
 export default function Footer () {

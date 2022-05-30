@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
+
 import "./components/reset.css";
 import './components/globalstyle.css';
 import Login from './Routes/Login';
@@ -7,7 +8,6 @@ import Register from './Routes/Register';
 import Habits from './Routes/Habits';
 import Daily from './Routes/Daily';
 import History from './Routes/History';
-
 import UserContext from './contexts/UserContext';
 import ProgressContext from './contexts/ProgressContext';
 
