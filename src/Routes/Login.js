@@ -9,7 +9,7 @@ import UserContext from "../contexts/UserContext";
 
 export default function Login() {
     const { setUser } = useContext(UserContext);
-    const [login, setLogin] = useState({email: "dh11v@gmail.com", password: "123"});
+    const [login, setLogin] = useState({email: "", password: ""});
     const [able, setAble] = useState(true);
     const navigate = useNavigate();
 
